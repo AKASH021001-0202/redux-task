@@ -6,8 +6,10 @@ const initialState = {
 
 const cartReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'add_to_cart':
-      const productExists = state.cartItems.some((item) => item.id === action.product.id);
+    case "add_to_cart":
+      const productExists = state.cartItems.some(
+        (item) => item.id === action.product.id
+      );
       if (productExists) {
         const updatedQuantities = {
           ...state.quantities,
@@ -25,19 +27,17 @@ const cartReducer = (state = initialState, action) => {
         quantities: { ...state.quantities, [action.product.id]: 1 },
         count: state.count + 1,
       };
-      case 'remove_from_cart':
-        const updatedItems = state.cartItems.filter((item) => item.id !== action.id);
-        const removedQuantity = state.quantities[action.id] || 0; 
-        const { [action.id]: removedItemQuantity, ...restQuantities } = state.quantities; 
-        const newCount = state.count - removedQuantity;
-        return {
-          ...state,
-          cartItems: updatedItems,
-          quantities: restQuantities,
-          count: Math.max(0, newCount), 
-        };
-      
-    case 'update_quantity':
+    case "remove_from_cart":
+      const updatedItems = state.cartItems.filter(
+        (item) => item.id !== action.id
+      );
+      return {
+        ...state,
+        cartItems: updatedItems,
+        quantities: { ...state.quantities },
+        count: state.count - 1, // Decrement count by 1 for each item removed
+      };
+    case "update_quantity":
       const newQuantities = {
         ...state.quantities,
         [action.id]: action.quantity,
